@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { nanoid } from 'nanoid';
-import Search from './components/Search'
+import Header from './components/Header';
+import Search from './components/Search';
 import NotesList from "./components/NotesList";
 
 const App = () => {
-  const [notes,setNotes] = useState([{
+  const [notes, setNotes] = useState([{
     id: nanoid(),
     text: "This is my First Note",
     date: "13/01/2022"
@@ -24,31 +25,42 @@ const App = () => {
     text: "This is my Fourth Note",
     date: "16/01/2022"
   },
-]);
+  ]);
 
-const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('');
 
-const addNote = (text) =>{
-  const date = new Date();
-		const newNote = {
-			id: nanoid(),
-			text: text,
-			date: date.toLocaleDateString(),
-		};
-		const newNotes = [...notes, newNote];
-		setNotes(newNotes);
-}
+  const [darkMode, setDarkMode] = useState(false);
 
-const deleteNote = (id) => {
-  const newNotes = notes.filter((note)=> note.id !== id);
-  setNotes(newNotes);
-}
+  const addNote = (text) => {
+    const date = new Date();
+    const newNote = {
+      id: nanoid(),
+      text: text,
+      date: date.toLocaleDateString(),
+    };
+    const newNotes = [...notes, newNote];
+    setNotes(newNotes);
+  }
+
+  const deleteNote = (id) => {
+    const newNotes = notes.filter((note) => note.id !== id);
+    setNotes(newNotes);
+  }
 
   return (
-    <div className="container">
-      <Search handleSearchNote={setSearchText}/>
-      <NotesList notes = {notes.filter((note)=>note.text.toLowerCase().includes(searchText))} handleAddNote={addNote} handleDeleteNote={deleteNote} />
-    </div>
+    <div className={`${darkMode && 'dark-mode'}`}>
+			<div className='container'>
+				<Header handleToggleDarkMode={setDarkMode} />
+				<Search handleSearchNote={setSearchText} />
+				<NotesList
+					notes={notes.filter((note) =>
+						note.text.toLowerCase().includes(searchText)
+					)}
+					handleAddNote={addNote}
+					handleDeleteNote={deleteNote}
+				/>
+			</div>
+		</div>
   )
 }
 
